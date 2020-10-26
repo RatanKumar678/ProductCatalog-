@@ -127,6 +127,6 @@ e. note: We will not show tags on products page, users can see them while
 editing the product.
 
 # Directory structure
-CRUDApp
+CatalogApp
 
 ![Image description](./src/assets/git.PNG)
