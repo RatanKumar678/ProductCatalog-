@@ -1,0 +1,85 @@
+<div class="container">
+  <div class="row no-gutters">
+    <div class="col-3">
+      <div class="card-container endside">
+        <div class="input-group mb-2 mt-5 col-12 pl-0">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><img style="width: 16px;"
+                src="https://img.icons8.com/android/64/000000/search.png" /></span>
+          </div>
+          <input type="text" class="form-control" name="searchUser" placeholder="Search product name..."
+            [(ngModel)]="searchTerm" id="globalSearch">
+        </div>
+
+        <ul class="list-group col-12">
+          <li class="list-group-item cursor" [ngClass]="{'active': SearchType === 'all'}"
+            (click)="searchBySideNav('all')">All
+          </li>
+          <li class="list-group-item cursor" *ngFor="let item of this.contactDetailService.getCategoryArr()"
+            (click)="searchBySideNav(item.id)" [ngClass]="{'active': SearchType === item.id}">{{item.name}}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-9">
+      <div class="card-container endside">
+        <div class="search-box">
+        </div>
+        <div class="button-div">
+          <button type="button" class="btn btn-primary btn-sm mr-0 router-link-active" [routerLink]="['/contact']">Add
+            New Product</button>
+        </div>
+      </div>
+      <div class="card-container">
+        <div class="card card-small list no-cursor">
+          <div class="col-3"> Name</div>
+          <div class="col-2"> Price</div>
+          <div class="col-2"> Category</div>
+          <div class="col-2">Trend score</div>
+          <div class="col-3 text-center"> Action</div>
+        </div>
+        <ng-container *ngIf="contactList.length !== 0; else elseNoData">
+
+          <ng-container *ngIf="( contactList | filterData:searchTerm) as result">
+            <div class="card card-small list no-cursor" *ngFor="let item of result; let i=index"
+              [ngClass]="{'ActiveList': activeIndex == i}">
+              <div class="col-3">
+                <button type="button" class="btn btn-link p-0 text-truncate w-100 text-left"
+                  (click)="editContact(i)" title="{{item.name}}">{{item.name  | titlecase}}</button>
+              </div>
+              <div class="col-2">
+                {{item.price | currency:'USD'}}
+              </div>
+              <div class="col-2">
+                {{this.contactDetailService.getCategoryName(item.category_id)}}
+              </div>
+              <div class="col-2 ">
+                {{ item.trend_score | number: '1.2-2'}}
+              </div>
+              <div class="col-3 text-center">
+                <div class="user-action">
+                  <button type="button" class="action-button btn btn-success" title="Down up"
+                    (click)="voteCount(item.id,'upvote_count')">
+                    <img src="https://img.icons8.com/cotton/64/000000/facebook-like--v2.png" />
+                    <span class="badge badge-light custom-badge custom-badge-up" [ngClass]="{'custom-badge-big': item.upvote_count > 99 }">{{item.upvote_count}}</span>
+                  </button>
+                  <button type="button" class="action-button btn btn-danger" title="Up Down" (click)="voteCount(item.id,'downvote_count')">
+                    <img src="https://img.icons8.com/cotton/64/000000/thumbs-down--v4.png" />
+                    <span class="badge badge-light custom-badge custom-badge-down" [ngClass]="{'custom-badge-big': item.downvote_count > 99 }">{{item.downvote_count}}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="card card-small list no-cursor" *ngIf="result.length === 0">
+              <div class="user-detail"> Product name<b>&nbsp;"{{searchTerm}}"&nbsp;</b> Not Found</div>
+            </div>
+          </ng-container>
+        </ng-container>
+        <ng-template #elseNoData>
+          <div class="card card-small list no-cursor">
+            <div class="user-detail"> Product category<b>&nbsp;"{{this.contactDetailService.getCategoryName(SearchType)}}"&nbsp;</b>Not Found</div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

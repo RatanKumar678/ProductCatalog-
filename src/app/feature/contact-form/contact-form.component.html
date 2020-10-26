@@ -1,0 +1,84 @@
+<div class="card-container endside">
+  <div class="card card-small add-button router-link-active" tabindex="0" [routerLink]="['/contact-list']">
+    <span>List</span>
+  </div>
+</div>
+
+<div class="card-container">
+  <!-- ==>{{ f | json }} -->
+  <div class="card card-small custom-form no-cursor">
+    <div class="pageHeader">Contact Form</div>
+    <form [formGroup]="contactFrom" #contactForm class="text-left">
+
+      <div class="form-inline">
+        <label for="name">Name *:</label>
+        <input type="text" id="name" placeholder="Enter Name" name="name" formControlName="name">
+        <div *ngIf="f.name.errors && f.name.dirty || f.name.touched" class="invalid-feedback d-block">
+          <div *ngIf="f.name.errors?.required">Name is required</div>
+        </div>
+      </div>
+
+      <div class="form-inline">
+        <label for="price">price *:</label>
+        <input type="text" id="price" placeholder="Enter price" name="price" formControlName="price" appAllowNumberOnly>
+        <div *ngIf="f.price.errors && f.price.dirty || f.price.touched" class="invalid-feedback d-block">
+          <div *ngIf="f.price.errors?.required">Price is required</div>
+          <div *ngIf="f.price.errors?.pattern">Price is Invalid</div>
+        </div>
+      </div>
+
+      <div class="form-inline ">
+        <label for="category_id" class="text-left">Category name:*</label>
+        <select class="custom-select" id="category_id" placeholder="Enter category name" name="category_id"
+          formControlName="category_id">
+          <option selected>Select Category name..</option>
+          <option [value]="item.id" *ngFor="let item of this.contactDetailService.getCategoryArr()">{{item.name}}
+          </option>
+        </select>
+        <div *ngIf="f.category_id.errors && f.category_id.dirty || f.category_id.touched"
+          class="invalid-feedback d-block">
+          <div *ngIf="f.category_id.errors?.required">Category name is required</div>
+        </div>
+      </div>
+
+      <div class="" formArrayName="tags">
+        <div>
+          <label for="category_id" class="text-left">Tags name:</label>
+        </div>
+        <div *ngIf="tags().length === 0" class="notag">
+          No Tag added for this product.
+        </div>
+        <ng-container *ngFor="let tag of tags().controls; let i=index" [formGroupName]="i">
+          <div class="custom-chips">
+            <input class="text-truncate" [title]="tagName.value" #tagName type="text" formControlName="nameTag"
+              disabled><button (click)="removeTag(i)">X</button>
+          </div>
+        </ng-container>
+
+        <div class="input-group py-2">
+          <input type="text" class="form-control" placeholder="Tag Name" aria-label="Tag Name"
+            aria-describedby="basic-addon2" #tagTame>
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" (click)="addTag(tagTame)">Add Tag</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="text-center">
+        <button type="button" class="btn btn-primary m-2" (click)="onSubmit()" [disabled]="this.contactFrom.invalid">
+          <ng-container *ngIf="this.id !== undefined; else ProductElseTemplate">
+            Update Product
+          </ng-container>
+          <ng-template #ProductElseTemplate>
+            Add Product
+          </ng-template>
+
+        </button>
+        <button type="button" class="btn btn-secondary" [routerLink]="['/contact-list']">Cancel</button>
+
+      </div>
+
+    </form>
+  </div>
+</div>
